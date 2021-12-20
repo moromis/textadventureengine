@@ -8,48 +8,16 @@ import (
 	"tae.com/mapManager"
 )
 
-// just for testing TODO: remove
-var here = &constants.Entity{
-	Name:     "Here",
-	Desc:     "A nice place",
-	Location: [2]int{0, 0},
-	ValidMoves: map[string]string{
-		constants.SOUTH: "You amble from here to there",
-	},
-}
-
-// just for testing TODO: remove
-var there = &constants.Entity{
-	Name:     "There",
-	Desc:     "An okay place, I guess",
-	Location: [2]int{1, 0},
-	ValidMoves: map[string]string{
-		constants.NORTH: "You mobilize from there to here",
-	},
-}
-
-// just for testing TODO: remove
-var ax = &constants.Entity{
-	Name: "Ax",
-	Desc: "An ax",
-}
-
-// just for testing TODO: remove
-var bow = &constants.Entity{
-	Name: "Bow",
-	Desc: "A bow",
-}
-
 // TODO: do these belong here, and should they be global?
-const VERBOSE = false                            // @global -- user defined, settings
-var mapLayout = []*constants.Entity{here, there} // @global -- user defined
-var mapWidth = 1                                 // @global -- user defined
-var startingRoom = here                          // @global -- user defined
+const VERBOSE = false // @global -- user defined, settings
+// var mapLayout = []*constants.Entity{}    // @global -- user defined
+// var mapWidth = 0                         // @global -- user defined
+// var startingRoom *constants.Entity = nil // @global -- user defined
 // var mapInstance = GetMap(mapLayout, mapWidth, startingRoom)
 
-func SetupStateMachine() {
+func SetupStateMachine(mapLayout []*constants.Entity, mapWidth int, startingRoom *constants.Entity, inventory []*constants.Entity) {
 	// TODO: read from file
-	inventoryManager.InitInventory([]*constants.Entity{ax, bow}, 100)
+	inventoryManager.InitInventory(inventory, 100) // TODO: read limit from preferences/file
 	mapManager.InitMapInstance(mapLayout, mapWidth, startingRoom)
 }
 

@@ -4,10 +4,11 @@ import (
 	"testing"
 
 	"tae.com/constants"
+	"tae.com/testObjects"
 )
 
 func TestParseInput(t *testing.T) {
-	SetupStateMachine()
+	SetupStateMachine(testObjects.TestMap, testObjects.TestMapWidth, testObjects.Here, testObjects.TestInventory)
 
 	tests := []struct {
 		testString string
@@ -26,29 +27,12 @@ func TestParseInput(t *testing.T) {
 }
 
 func TestParseMovement(t *testing.T) {
-	var here = &constants.Entity{
-		Name:     "Here",
-		Desc:     "A nice place",
-		Location: [2]int{0, 0},
-		ValidMoves: map[string]string{
-			constants.SOUTH: "You amble from here to there",
-		},
-	}
-	var there = &constants.Entity{
-		Name:     "There",
-		Desc:     "An okay place, I guess",
-		Location: [2]int{1, 0},
-		ValidMoves: map[string]string{
-			constants.NORTH: "You mobilize from there to here",
-		},
-	}
-
-	SetupStateMachine()
+	SetupStateMachine(testObjects.TestMap, testObjects.TestMapWidth, testObjects.Here, testObjects.TestInventory)
 
 	emptyArray := []string{}
 	southArray := []string{"go", "south"}
 	northArray := []string{"go", "north"}
-	println(here.ValidMoves[constants.SOUTH])
+	println(testObjects.Here.ValidMoves[constants.SOUTH])
 	tests := []struct {
 		testString string
 		splitInput []string
@@ -57,9 +41,9 @@ func TestParseMovement(t *testing.T) {
 		{"", emptyArray, constants.UNKNOWN},
 		{"asdf", emptyArray, constants.UNKNOWN},
 		{"go", emptyArray, constants.WHERE_TO_GO("go")},
-		{"go", southArray, here.ValidMoves[constants.SOUTH]}, // TODO: in the future this will actually respond with the movement response from the room?
+		{"go", southArray, testObjects.Here.ValidMoves[constants.SOUTH]}, // TODO: in the future this will actually respond with the movement response from the room?
 		{"walk", emptyArray, constants.WHERE_TO_GO("walk")},
-		{"walk", northArray, there.ValidMoves[constants.NORTH]}, // TODO: in the future this will actually respond with the movement response from the room?
+		{"walk", northArray, testObjects.There.ValidMoves[constants.NORTH]}, // TODO: in the future this will actually respond with the movement response from the room?
 	}
 
 	for _, test := range tests {

@@ -1,11 +1,15 @@
 package main
 
 import (
+	"log"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"tae.com/gameFileIO"
 	"tae.com/mapManager"
 	"tae.com/stateMachine"
 )
@@ -48,14 +52,35 @@ func openMapWindow(a fyne.App) {
 	w.SetContent(mapWidget)
 	mapWidget.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
-	// show and run the window
+	// show the window
 	w.Show()
+}
+
+func openFileSelect(a fyne.App, callback func()) {
+	w := a.NewWindow("Open Game (*.tae)")
+	// show the window
+	w.Show()
+	w.SetFixedSize(true)
+	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
+		if err != nil {
+			log.Fatal(err)
+		}
+		uri := item.URI()
+		filename := uri.Path()
+		// TODO: do something with entities
+		var mapLayout, mapWidth, startingRoom, _, inventory = gameFileIO.ReadGameFileFromJson(filename)
+		stateMachine.SetupStateMachine(mapLayout, mapWidth, startingRoom, inventory)
+		callback()
+		w.Close()
+	}, w)
 }
 
 // MAIN
 func main() {
 	// setup state machine
-	stateMachine.SetupStateMachine()
+	// TODO: move this to after loading game file
+	// stateMachine.SetupStateMachine()
 
 	// setup window
 	a := app.New()
@@ -63,19 +88,22 @@ func main() {
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
-	openMapWindow(a)
+	// TODO: remove, just for testing
+	// openMapWindow(a)
 
 	// HEADER
 	// buttons
 	exit := widget.NewButton("Exit", func() { w.Close() })
 	openMap := widget.NewButton("Open Map", func() { go openMapWindow(a) })
+	openMap.Disable()
 	// title
 	title := widget.NewLabel("{Game Title}") // TODO: get title from game files when loaded
 	title.TextStyle.Bold = true
 
 	// OUTPUT BUFFER
-	var mapInstance = mapManager.GetMap()
-	var t = mapInstance.PrintRoom(false)
+	// TODO: move this to after setting up state machine
+	//       also, this could be a custom action
+	var t = ""
 	text := widget.NewTextGrid()
 	text.SetText(t)
 	textScroll := container.NewVScroll(
@@ -103,14 +131,27 @@ func main() {
 		input.Enable()
 	}
 	input.SetPlaceHolder("Type Here")
+	input.Disable()
 	input.OnSubmitted = submitFunc
 
 	// SUBMIT BUTTON
 	submit := widget.NewButtonWithIcon("Submit", fyne.CurrentApp().Icon(), func() { submitFunc(input.Text) })
+	submit.Disable()
+
+	// OPEN FILE BUTTON
+	openFile := widget.NewButton("Open Game File", func() {
+		go openFileSelect(a, func() {
+			t = mapManager.GetMap().PrintRoom(false)
+			text.SetText(t)
+			submit.Enable()
+			input.Enable()
+			openMap.Enable()
+		})
+	})
 
 	// set up the contents of the window
 	w.SetContent(container.NewVBox(
-		container.NewHBox(exit, layout.NewSpacer(), openMap),
+		container.NewHBox(exit, openFile, layout.NewSpacer(), openMap),
 		title,
 		textScroll,
 		// layout.NewSpacer(),
