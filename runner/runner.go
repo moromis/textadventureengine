@@ -79,18 +79,11 @@ func openFileSelect(a fyne.App, callback func()) {
 
 // MAIN
 func main() {
-	// setup state machine
-	// TODO: move this to after loading game file
-	// stateMachine.SetupStateMachine()
-
 	// setup window
 	a := app.New()
 	w := a.NewWindow("Runner") // TODO: replace with title of game?
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
-
-	// TODO: remove, just for testing
-	// openMapWindow(a)
 
 	// HEADER
 	// buttons
@@ -102,8 +95,6 @@ func main() {
 	title.TextStyle.Bold = true
 
 	// OUTPUT BUFFER
-	// TODO: move this to after setting up state machine
-	//       also, this could be a custom action
 	var t = ""
 	text := widget.NewTextGrid()
 	text.SetText(t)
