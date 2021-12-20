@@ -51,3 +51,12 @@ var Bow = &structs.Entity{
 var TestInventory = []*structs.Entity{
 	Ax,
 }
+
+// GAME
+var TestGame = &structs.Game{
+	Title:        "test_data",
+	MapLayout:    TestMap,
+	MapWidth:     TestMapWidth,
+	StartingRoom: Here,
+	Inventory:    TestInventory,
+}

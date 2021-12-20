@@ -8,6 +8,7 @@ import (
 	"textadventureengine/helpers"
 	"textadventureengine/runner/mapManager"
 	"textadventureengine/runner/stateMachine"
+	"textadventureengine/structs"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -17,6 +18,7 @@ import (
 )
 
 // GLOBALS
+// TODO: move to preferences
 var WINDOW_WIDTH float32 = 640
 var WINDOW_HEIGHT float32 = 480
 
@@ -70,17 +72,15 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 		}
 		uri := item.URI()
 		path := uri.Path()
-		// TODO: do something with entities
-		var mapLayout, mapWidth, startingRoom, _, inventory = gameFileIO.ReadGameFileFromJson(path)
-		stateMachine.SetupStateMachine(mapLayout, mapWidth, startingRoom, inventory)
+		stateMachine.SetupStateMachine(gameFileIO.ReadGameFileFromJson(path))
 		callback(uri)
 		w.Close()
 	}, w)
 }
 
-func OpenRunner(a fyne.App) {
+func OpenRunner(a fyne.App, game *structs.Game) {
 	// setup window
-	w := a.NewWindow("Runner") // TODO: replace with title of game?
+	w := a.NewWindow("TAE Runner") // TODO: replace with title of game?
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -90,7 +90,7 @@ func OpenRunner(a fyne.App) {
 	openMap := widget.NewButton("Open Map", func() { go openMapWindow(a) })
 	openMap.Disable()
 	// title
-	title := widget.NewLabel("") // TODO: get title from game files when loaded
+	title := widget.NewLabel("")
 	title.TextStyle.Bold = true
 
 	// OUTPUT BUFFER
@@ -129,17 +129,28 @@ func OpenRunner(a fyne.App) {
 	submit := widget.NewButtonWithIcon("Submit", fyne.CurrentApp().Icon(), func() { submitFunc(input.Text) })
 	submit.Disable()
 
+	// open game callback
+	var openGameCallback = func(newTitleText string) {
+		title.SetText(helpers.TitleCase(newTitleText))
+		t = mapManager.GetMap().PrintRoom(false)
+		text.SetText(t)
+		submit.Enable()
+		input.Enable()
+		openMap.Enable()
+	}
+
 	// OPEN FILE BUTTON
 	openFile := widget.NewButton("Open Game File", func() {
 		go openFileSelect(a, func(uri fyne.URI) {
-			title.SetText(helpers.TitleCase(strings.ReplaceAll(uri.Name(), uri.Extension(), "")))
-			t = mapManager.GetMap().PrintRoom(false)
-			text.SetText(t)
-			submit.Enable()
-			input.Enable()
-			openMap.Enable()
+			openGameCallback(helpers.TitleCase(strings.ReplaceAll(uri.Name(), uri.Extension(), "")))
 		})
 	})
+
+	// setup game if we've been given one
+	if game != nil {
+		stateMachine.SetupStateMachine(game)
+		openGameCallback(game.Title)
+	}
 
 	// set up the contents of the window
 	w.SetContent(container.NewVBox(

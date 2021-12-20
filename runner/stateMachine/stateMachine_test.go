@@ -12,7 +12,7 @@ import (
 )
 
 func TestParseInput(t *testing.T) {
-	SetupStateMachine(testObjects.TestMap, testObjects.TestMapWidth, testObjects.Here, testObjects.TestInventory)
+	SetupStateMachine(testObjects.TestGame)
 
 	tests := []struct {
 		testString string
@@ -29,7 +29,7 @@ func TestParseInput(t *testing.T) {
 }
 
 func TestParseMovement(t *testing.T) {
-	SetupStateMachine(testObjects.TestMap, testObjects.TestMapWidth, testObjects.Here, testObjects.TestInventory)
+	SetupStateMachine(testObjects.TestGame)
 
 	emptyArray := []string{}
 	southArray := []string{"go", "south"}

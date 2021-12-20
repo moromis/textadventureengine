@@ -9,13 +9,11 @@ import (
 )
 
 func TestJsonIO(t *testing.T) {
-	var testStartingRoom = testObjects.Here
-	WriteGameFileToJson("test_data", testObjects.TestMap, testObjects.TestMapWidth, testStartingRoom, testObjects.TestEntities, testObjects.TestInventory)
-	var mapLayout, mapWidth, startingRoom, entities, inventory = ReadGameFileFromJson("test_data")
+	WriteGameFileToJson(testObjects.TestGame)
+	var gameFromDisk = ReadGameFileFromJson(testObjects.TestGame.Title)
 
-	assert.Equal(t, testObjects.TestMapWidth, mapWidth)
-	assert.Equal(t, testObjects.TestMap, mapLayout)
-	assert.Equal(t, testStartingRoom, startingRoom)
-	assert.Equal(t, testObjects.TestEntities, entities)
-	assert.Equal(t, testObjects.TestInventory, inventory)
+	assert.Equal(t, testObjects.TestGame.MapWidth, gameFromDisk.MapWidth)
+	assert.Equal(t, testObjects.TestGame.MapLayout, gameFromDisk.MapLayout)
+	assert.Equal(t, testObjects.TestGame.StartingRoom, gameFromDisk.StartingRoom)
+	assert.Equal(t, testObjects.TestGame.Inventory, gameFromDisk.Inventory)
 }

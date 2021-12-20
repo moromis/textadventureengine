@@ -13,9 +13,9 @@ import (
 // TODO: do these belong here, and should they be global?
 const VERBOSE = false // @global -- user defined, settings
 
-func SetupStateMachine(mapLayout []*structs.Entity, mapWidth int, startingRoom *structs.Entity, inventory []*structs.Entity) {
-	inventoryManager.InitInventory(inventory, 100) // TODO: read limit from preferences/file
-	mapManager.InitMapInstance(mapLayout, mapWidth, startingRoom)
+func SetupStateMachine(game *structs.Game) {
+	inventoryManager.InitInventory(game.Inventory, 100) // TODO: read limit from preferences/file
+	mapManager.InitMapInstance(game.MapLayout, game.MapWidth, game.StartingRoom)
 }
 
 // TODO: allow for arrays of responses, and randomly select if the type is an array

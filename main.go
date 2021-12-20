@@ -1,6 +1,7 @@
 package main
 
 import (
+	"textadventureengine/editor"
 	"textadventureengine/runner"
 
 	"fyne.io/fyne/v2"
@@ -11,6 +12,7 @@ import (
 )
 
 // GLOBALS
+// TODO: move to preferences
 var WINDOW_WIDTH float32 = 640
 var WINDOW_HEIGHT float32 = 480
 
@@ -25,11 +27,11 @@ func main() {
 	// HEADER
 	// buttons
 	exit := widget.NewButton("Exit", func() { w.Close() })
-	openRunner := widget.NewButton("Open Game Runner", func() { go runner.OpenRunner(a) })
-	openMaker := widget.NewButton("Open Game Maker", func() {})
+	openRunner := widget.NewButton("Open Game Runner", func() { go runner.OpenRunner(a, nil) })
+	openEditor := widget.NewButton("Open Game Editor", func() { go editor.OpenEditor(a) })
 
 	// set up the contents of the window
-	w.SetContent(container.NewVBox(container.NewHBox(exit), layout.NewSpacer(), layout.NewSpacer(), openRunner, layout.NewSpacer(), openMaker, layout.NewSpacer(), layout.NewSpacer()))
+	w.SetContent(container.NewVBox(container.NewHBox(exit), layout.NewSpacer(), layout.NewSpacer(), openRunner, layout.NewSpacer(), openEditor, layout.NewSpacer(), layout.NewSpacer()))
 
 	// show and run the window
 	w.ShowAndRun()
