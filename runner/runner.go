@@ -1,4 +1,4 @@
-package main
+package runner
 
 import (
 	"log"
@@ -8,7 +8,6 @@ import (
 	"textadventureengine/stateMachine"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
@@ -77,10 +76,8 @@ func openFileSelect(a fyne.App, callback func()) {
 	}, w)
 }
 
-// MAIN
-func main() {
+func OpenRunner(a fyne.App) {
 	// setup window
-	a := app.New()
 	w := a.NewWindow("Runner") // TODO: replace with title of game?
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -155,5 +152,5 @@ func main() {
 	w.Canvas().Focus(input)
 
 	// show and run the window
-	w.ShowAndRun()
+	w.Show()
 }
