@@ -10,13 +10,8 @@ import (
 
 // TODO: do these belong here, and should they be global?
 const VERBOSE = false // @global -- user defined, settings
-// var mapLayout = []*constants.Entity{}    // @global -- user defined
-// var mapWidth = 0                         // @global -- user defined
-// var startingRoom *constants.Entity = nil // @global -- user defined
-// var mapInstance = GetMap(mapLayout, mapWidth, startingRoom)
 
 func SetupStateMachine(mapLayout []*constants.Entity, mapWidth int, startingRoom *constants.Entity, inventory []*constants.Entity) {
-	// TODO: read from file
 	inventoryManager.InitInventory(inventory, 100) // TODO: read limit from preferences/file
 	mapManager.InitMapInstance(mapLayout, mapWidth, startingRoom)
 }
