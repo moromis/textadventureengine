@@ -3,16 +3,17 @@ package stateMachine
 import (
 	"strings"
 
-	"textadventureengine/constants"
 	"textadventureengine/helpers"
-	"textadventureengine/inventoryManager"
-	"textadventureengine/mapManager"
+	"textadventureengine/runner/constants"
+	"textadventureengine/runner/inventoryManager"
+	"textadventureengine/runner/mapManager"
+	"textadventureengine/structs"
 )
 
 // TODO: do these belong here, and should they be global?
 const VERBOSE = false // @global -- user defined, settings
 
-func SetupStateMachine(mapLayout []*constants.Entity, mapWidth int, startingRoom *constants.Entity, inventory []*constants.Entity) {
+func SetupStateMachine(mapLayout []*structs.Entity, mapWidth int, startingRoom *structs.Entity, inventory []*structs.Entity) {
 	inventoryManager.InitInventory(inventory, 100) // TODO: read limit from preferences/file
 	mapManager.InitMapInstance(mapLayout, mapWidth, startingRoom)
 }
@@ -56,7 +57,7 @@ func movePlayer(direction string) string {
 	validMoves := mapInstance.GetCurrentRoom().ValidMoves
 	if validMoves[direction] != "" {
 		// get the cardinal direction move array [colMove, rowMove]
-		movement := constants.CARDINAL_DIRECTIONS[direction]
+		movement := structs.CARDINAL_DIRECTIONS[direction]
 		// if the movement is not malformed/exists
 		if len(movement) == 2 {
 			// ensure the move is possible

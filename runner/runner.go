@@ -2,10 +2,12 @@ package runner
 
 import (
 	"log"
+	"strings"
 
 	"textadventureengine/gameFileIO"
-	"textadventureengine/mapManager"
-	"textadventureengine/stateMachine"
+	"textadventureengine/helpers"
+	"textadventureengine/runner/mapManager"
+	"textadventureengine/runner/stateMachine"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -56,7 +58,7 @@ func openMapWindow(a fyne.App) {
 	w.Show()
 }
 
-func openFileSelect(a fyne.App, callback func()) {
+func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 	w := a.NewWindow("Open Game (*.tae)")
 	// show the window
 	w.Show()
@@ -67,11 +69,11 @@ func openFileSelect(a fyne.App, callback func()) {
 			log.Fatal(err)
 		}
 		uri := item.URI()
-		filename := uri.Path()
+		path := uri.Path()
 		// TODO: do something with entities
-		var mapLayout, mapWidth, startingRoom, _, inventory = gameFileIO.ReadGameFileFromJson(filename)
+		var mapLayout, mapWidth, startingRoom, _, inventory = gameFileIO.ReadGameFileFromJson(path)
 		stateMachine.SetupStateMachine(mapLayout, mapWidth, startingRoom, inventory)
-		callback()
+		callback(uri)
 		w.Close()
 	}, w)
 }
@@ -88,7 +90,7 @@ func OpenRunner(a fyne.App) {
 	openMap := widget.NewButton("Open Map", func() { go openMapWindow(a) })
 	openMap.Disable()
 	// title
-	title := widget.NewLabel("{Game Title}") // TODO: get title from game files when loaded
+	title := widget.NewLabel("") // TODO: get title from game files when loaded
 	title.TextStyle.Bold = true
 
 	// OUTPUT BUFFER
@@ -129,7 +131,8 @@ func OpenRunner(a fyne.App) {
 
 	// OPEN FILE BUTTON
 	openFile := widget.NewButton("Open Game File", func() {
-		go openFileSelect(a, func() {
+		go openFileSelect(a, func(uri fyne.URI) {
+			title.SetText(helpers.TitleCase(strings.ReplaceAll(uri.Name(), uri.Extension(), "")))
 			t = mapManager.GetMap().PrintRoom(false)
 			text.SetText(t)
 			submit.Enable()

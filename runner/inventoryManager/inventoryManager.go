@@ -4,15 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-
-	"textadventureengine/constants"
+	"textadventureengine/structs"
 )
 
 type Inventory struct {
-	GetInventory      func() []*constants.Entity
-	AddToInventory    func(thing *constants.Entity) int
-	SetInventory      func(stuff []*constants.Entity)
-	SetInventoryLimit func(newSize int) []*constants.Entity
+	GetInventory      func() []*structs.Entity
+	AddToInventory    func(thing *structs.Entity) int
+	SetInventory      func(stuff []*structs.Entity)
+	SetInventoryLimit func(newSize int) []*structs.Entity
 	InspectInventory  func(itemName string) (int, string)
 	PrintInventory    func() string
 }
@@ -23,7 +22,7 @@ func GetInventory() *Inventory {
 	return inventoryInstance
 }
 
-func InitInventory(initialStuff []*constants.Entity, maxSize int) (int, error) {
+func InitInventory(initialStuff []*structs.Entity, maxSize int) (int, error) {
 	if maxSize < 0 {
 		return -1, errors.New("max inventory size of less than 0 passed")
 	}
@@ -34,10 +33,10 @@ func InitInventory(initialStuff []*constants.Entity, maxSize int) (int, error) {
 	var inventoryLimit = maxSize
 	var inventory = initialStuff
 
-	getInventory := func() []*constants.Entity {
+	getInventory := func() []*structs.Entity {
 		return inventory
 	}
-	addToInventory := func(thing *constants.Entity) int {
+	addToInventory := func(thing *structs.Entity) int {
 		if len(inventory) < inventoryLimit {
 			inventory = append(inventory, thing)
 			return 0
@@ -45,10 +44,10 @@ func InitInventory(initialStuff []*constants.Entity, maxSize int) (int, error) {
 			return -1
 		}
 	}
-	setInventory := func(stuff []*constants.Entity) {
+	setInventory := func(stuff []*structs.Entity) {
 		inventory = stuff
 	}
-	setInventoryLimit := func(newSize int) []*constants.Entity {
+	setInventoryLimit := func(newSize int) []*structs.Entity {
 		inventoryLimit = newSize
 		if newSize < len(inventory) {
 			ejectedItems := inventory[newSize:]

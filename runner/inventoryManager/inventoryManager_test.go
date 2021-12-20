@@ -3,7 +3,7 @@ package inventoryManager
 import (
 	"testing"
 
-	"textadventureengine/constants"
+	"textadventureengine/structs"
 	"textadventureengine/testObjects"
 
 	"github.com/stretchr/testify/assert"
@@ -32,7 +32,7 @@ func TestInventory(t *testing.T) {
 	inv = inventoryInstance.GetInventory()
 	assert.Len(t, inv, 2)
 	ejectedItems := inventoryInstance.SetInventoryLimit(10)
-	assert.Equal(t, ejectedItems, []*constants.Entity(nil))
+	assert.Equal(t, ejectedItems, []*structs.Entity(nil))
 	ejectedItems = inventoryInstance.SetInventoryLimit(1)
 	assert.Len(t, ejectedItems, 1)
 	assert.Equal(t, ejectedItems[0], testObjects.Bow)

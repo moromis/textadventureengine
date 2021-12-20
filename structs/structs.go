@@ -1,4 +1,4 @@
-package constants
+package structs
 
 const (
 	ROOM_TYPE int = iota

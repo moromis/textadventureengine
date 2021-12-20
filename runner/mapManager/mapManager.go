@@ -3,15 +3,14 @@ package mapManager
 import (
 	"fmt"
 	"strings"
-
-	"textadventureengine/constants"
+	"textadventureengine/structs"
 )
 
 type MapInstance struct {
 	GetWidth       func() int
-	GetMapLayout   func() []*constants.Entity
+	GetMapLayout   func() []*structs.Entity
 	GetMapTable    func() [][]string
-	GetCurrentRoom func() *constants.Entity
+	GetCurrentRoom func() *structs.Entity
 	PrintRoom      func(full bool) string
 	CanMove        func(move [2]int) bool
 	Move           func(move [2]int)
@@ -19,7 +18,7 @@ type MapInstance struct {
 
 var mapInstance *MapInstance = nil
 
-func getValidMovesString(room *constants.Entity) string {
+func getValidMovesString(room *structs.Entity) string {
 	ret := "\nFrom here, you can go:\n"
 	i := 0
 	for move := range room.ValidMoves {
@@ -37,12 +36,12 @@ func GetMap() *MapInstance {
 }
 
 // TODO: put all map management, map state, current room, etc. here
-func InitMapInstance(mapLayout []*constants.Entity, mapWidth int, startingRoom *constants.Entity) {
+func InitMapInstance(mapLayout []*structs.Entity, mapWidth int, startingRoom *structs.Entity) {
 	var currentRoom = startingRoom
 	getWidth := func() int {
 		return mapWidth
 	}
-	getMapLayout := func() []*constants.Entity {
+	getMapLayout := func() []*structs.Entity {
 		return mapLayout
 	}
 	getMapTable := func() [][]string {
@@ -63,7 +62,7 @@ func InitMapInstance(mapLayout []*constants.Entity, mapWidth int, startingRoom *
 		}
 		return fmt.Sprintf("%s\n%s\n%s\n", strings.ToUpper(currentRoom.Name), currentRoom.Desc, details) // TODO: in the future we'll want to have varying levels of verbosity
 	}
-	getCurrentRoom := func() *constants.Entity {
+	getCurrentRoom := func() *structs.Entity {
 		return currentRoom
 	}
 	canMove := func(move [2]int) bool {

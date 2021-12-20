@@ -3,8 +3,9 @@ package stateMachine
 import (
 	"testing"
 
-	"textadventureengine/constants"
 	"textadventureengine/helpers"
+	"textadventureengine/runner/constants"
+	"textadventureengine/structs"
 	"textadventureengine/testObjects"
 
 	"github.com/stretchr/testify/assert"
@@ -41,9 +42,9 @@ func TestParseMovement(t *testing.T) {
 		{"", emptyArray, constants.UNKNOWN},
 		{"asdf", emptyArray, constants.UNKNOWN},
 		{"go", emptyArray, constants.WHERE_TO_GO("go")},
-		{"go", southArray, testObjects.Here.ValidMoves[constants.SOUTH]}, // TODO: in the future this will actually respond with the movement response from the room?
+		{"go", southArray, testObjects.Here.ValidMoves[structs.SOUTH]}, // TODO: in the future this will actually respond with the movement response from the room?
 		{"walk", emptyArray, constants.WHERE_TO_GO("walk")},
-		{"walk", northArray, testObjects.There.ValidMoves[constants.NORTH]}, // TODO: in the future this will actually respond with the movement response from the room?
+		{"walk", northArray, testObjects.There.ValidMoves[structs.NORTH]}, // TODO: in the future this will actually respond with the movement response from the room?
 	}
 
 	for _, test := range tests {
