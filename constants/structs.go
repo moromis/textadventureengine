@@ -1,4 +1,4 @@
-package main
+package constants
 
 const (
 	ROOM_TYPE int = iota
@@ -7,12 +7,12 @@ const (
 )
 
 type Entity struct {
-	name       string            // just an identifier
-	desc       string            // the description of the entity -- what if this changes based on triggers or items -- maybe have a list of strings? Or an object/enum?
-	stuff      []Entity          // stuff that the entity has -- an inventory of sorts
-	location   [2]int            // where is this entity currently located
-	validMoves map[string]string // valid movement commands (TODO: should this only accept cardinal directions), mapped to movement responses
-	entityType int               // what type of entity this is, ROOM_TYPE, ANIMATE_TYPE, or INANIMATE_TYPE
+	Name       string            // just an identifier
+	Desc       string            // the description of the entity -- what if this changes based on triggers or items -- maybe have a list of strings? Or an object/enum?
+	Stuff      []Entity          // stuff that the entity has -- an inventory of sorts
+	Location   [2]int            // where is this entity currently located
+	ValidMoves map[string]string // valid movement commands (TODO: should this only accept cardinal directions), mapped to movement responses
+	EntityType int               // what type of entity this is, ROOM_TYPE, ANIMATE_TYPE, or INANIMATE_TYPE
 }
 
 // TODO: what about up, down, around, into, etc?

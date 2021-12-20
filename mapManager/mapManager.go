@@ -1,28 +1,30 @@
-package main
+package mapManager
 
 import (
 	"fmt"
 	"strings"
+
+	"tae.com/constants"
 )
 
 type MapInstance struct {
-	getWidth       func() int
-	getMapLayout   func() []*Entity
-	getMapTable    func() [][]string
-	getCurrentRoom func() *Entity
-	printRoom      func(full bool) string
-	canMove        func(move [2]int) bool
-	move           func(move [2]int)
+	GetWidth       func() int
+	GetMapLayout   func() []*constants.Entity
+	GetMapTable    func() [][]string
+	GetCurrentRoom func() *constants.Entity
+	PrintRoom      func(full bool) string
+	CanMove        func(move [2]int) bool
+	Move           func(move [2]int)
 }
 
 var mapInstance *MapInstance = nil
 
-func getValidMovesString(room *Entity) string {
+func getValidMovesString(room *constants.Entity) string {
 	ret := "\nFrom here, you can go:\n"
 	i := 0
-	for move := range room.validMoves {
+	for move := range room.ValidMoves {
 		ret += "- " + move
-		if i < len(room.validMoves)-1 {
+		if i < len(room.ValidMoves)-1 {
 			ret += "\n"
 		}
 		i++
@@ -30,19 +32,23 @@ func getValidMovesString(room *Entity) string {
 	return ret
 }
 
+func GetMap() *MapInstance {
+	return mapInstance
+}
+
 // TODO: put all map management, map state, current room, etc. here
-func initMapInstance(mapLayout []*Entity, mapWidth int, startingRoom *Entity) {
+func InitMapInstance(mapLayout []*constants.Entity, mapWidth int, startingRoom *constants.Entity) {
 	var currentRoom = startingRoom
 	getWidth := func() int {
 		return mapWidth
 	}
-	getMapLayout := func() []*Entity {
+	getMapLayout := func() []*constants.Entity {
 		return mapLayout
 	}
 	getMapTable := func() [][]string {
 		stringified := []string{}
 		for _, room := range mapLayout {
-			stringified = append(stringified, room.name)
+			stringified = append(stringified, room.Name)
 		}
 		ret := [][]string{}
 		for i := 0; i < len(stringified); i += mapWidth {
@@ -55,19 +61,19 @@ func initMapInstance(mapLayout []*Entity, mapWidth int, startingRoom *Entity) {
 		if full {
 			details = getValidMovesString(currentRoom)
 		}
-		return fmt.Sprintf("%s\n%s\n%s\n", strings.ToUpper(currentRoom.name), currentRoom.desc, details) // TODO: in the future we'll want to have varying levels of verbosity
+		return fmt.Sprintf("%s\n%s\n%s\n", strings.ToUpper(currentRoom.Name), currentRoom.Desc, details) // TODO: in the future we'll want to have varying levels of verbosity
 	}
-	getCurrentRoom := func() *Entity {
+	getCurrentRoom := func() *constants.Entity {
 		return currentRoom
 	}
 	canMove := func(move [2]int) bool {
-		potentialColChange := currentRoom.location[0] + move[0]
-		potentialRowChange := currentRoom.location[1] + move[1]
+		potentialColChange := currentRoom.Location[0] + move[0]
+		potentialRowChange := currentRoom.Location[1] + move[1]
 		return potentialRowChange >= 0 && potentialColChange >= 0
 	}
 	move := func(move [2]int) {
-		colMove := currentRoom.location[0] + move[0]
-		rowMove := currentRoom.location[1] + move[1]
+		colMove := currentRoom.Location[0] + move[0]
+		rowMove := currentRoom.Location[1] + move[1]
 		currentRoom = mapLayout[colMove+rowMove*mapWidth]
 	}
 

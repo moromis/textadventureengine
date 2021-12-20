@@ -6,6 +6,8 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"tae.com/mapManager"
+	"tae.com/stateMachine"
 )
 
 // GLOBALS
@@ -13,7 +15,8 @@ var WINDOW_WIDTH float32 = 640
 var WINDOW_HEIGHT float32 = 480
 
 func getMapTable() *widget.Table {
-	var data = mapInstance.getMapTable()
+	var mapInstance = mapManager.GetMap()
+	var data = mapInstance.GetMapTable()
 	table := widget.NewTable(
 		func() (int, int) {
 			return len(data), len(data[0])
@@ -22,7 +25,7 @@ func getMapTable() *widget.Table {
 			return widget.NewLabel("wide content")
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
-			currentLocation := mapInstance.getCurrentRoom().location
+			currentLocation := mapInstance.GetCurrentRoom().Location
 			newLabel := data[i.Row][i.Col]
 			if i.Row == currentLocation[0] && i.Col == currentLocation[1] {
 				newLabel += " *"
@@ -52,7 +55,7 @@ func openMapWindow(a fyne.App) {
 // MAIN
 func main() {
 	// setup state machine
-	setupStateMachine()
+	stateMachine.SetupStateMachine()
 
 	// setup window
 	a := app.New()
@@ -71,7 +74,8 @@ func main() {
 	title.TextStyle.Bold = true
 
 	// OUTPUT BUFFER
-	var t = mapInstance.printRoom(false)
+	var mapInstance = mapManager.GetMap()
+	var t = mapInstance.PrintRoom(false)
 	text := widget.NewTextGrid()
 	text.SetText(t)
 	textScroll := container.NewVScroll(
@@ -90,7 +94,7 @@ func main() {
 		input.Disable()                 // disable the input till we have a response
 
 		// send response
-		response := parseInput(inputText)
+		response := stateMachine.ParseInput(inputText)
 
 		// add response to output buffer
 		t = t + "\n" + response + "\n"

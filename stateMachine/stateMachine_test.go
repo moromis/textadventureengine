@@ -1,20 +1,24 @@
-package main
+package stateMachine
 
-import "testing"
+import (
+	"testing"
+
+	"tae.com/constants"
+)
 
 func TestParseInput(t *testing.T) {
-	setupStateMachine()
+	SetupStateMachine()
 
 	tests := []struct {
 		testString string
 		result     string
 	}{
-		{"", UNKNOWN},
-		{"asdf", UNKNOWN},
+		{"", constants.UNKNOWN},
+		{"asdf", constants.UNKNOWN},
 	}
 
 	for _, test := range tests {
-		result := parseInput(test.testString)
+		result := ParseInput(test.testString)
 		if result != test.result {
 			t.Errorf("Parsing %s failed, got: %s, want: %s.", test.testString, result, test.result)
 		}
@@ -22,44 +26,44 @@ func TestParseInput(t *testing.T) {
 }
 
 func TestParseMovement(t *testing.T) {
-	var here = &Entity{
-		name:     "Here",
-		desc:     "A nice place",
-		location: [2]int{0, 0},
-		validMoves: map[string]string{
-			SOUTH: "You amble from here to there",
+	var here = &constants.Entity{
+		Name:     "Here",
+		Desc:     "A nice place",
+		Location: [2]int{0, 0},
+		ValidMoves: map[string]string{
+			constants.SOUTH: "You amble from here to there",
 		},
 	}
-	var there = &Entity{
-		name:     "There",
-		desc:     "An okay place, I guess",
-		location: [2]int{1, 0},
-		validMoves: map[string]string{
-			NORTH: "You mobilize from there to here",
+	var there = &constants.Entity{
+		Name:     "There",
+		Desc:     "An okay place, I guess",
+		Location: [2]int{1, 0},
+		ValidMoves: map[string]string{
+			constants.NORTH: "You mobilize from there to here",
 		},
 	}
 
-	setupStateMachine()
+	SetupStateMachine()
 
 	emptyArray := []string{}
 	southArray := []string{"go", "south"}
 	northArray := []string{"go", "north"}
-	println(here.validMoves[SOUTH])
+	println(here.ValidMoves[constants.SOUTH])
 	tests := []struct {
 		testString string
 		splitInput []string
 		result     string
 	}{
-		{"", emptyArray, UNKNOWN},
-		{"asdf", emptyArray, UNKNOWN},
-		{"go", emptyArray, WHERE_TO_GO("go")},
-		{"go", southArray, here.validMoves[SOUTH]}, // TODO: in the future this will actually respond with the movement response from the room?
-		{"walk", emptyArray, WHERE_TO_GO("walk")},
-		{"walk", northArray, there.validMoves[NORTH]}, // TODO: in the future this will actually respond with the movement response from the room?
+		{"", emptyArray, constants.UNKNOWN},
+		{"asdf", emptyArray, constants.UNKNOWN},
+		{"go", emptyArray, constants.WHERE_TO_GO("go")},
+		{"go", southArray, here.ValidMoves[constants.SOUTH]}, // TODO: in the future this will actually respond with the movement response from the room?
+		{"walk", emptyArray, constants.WHERE_TO_GO("walk")},
+		{"walk", northArray, there.ValidMoves[constants.NORTH]}, // TODO: in the future this will actually respond with the movement response from the room?
 	}
 
 	for _, test := range tests {
-		result := parseMovement(test.testString, test.splitInput, UNKNOWN)
+		result := parseMovement(test.testString, test.splitInput, constants.UNKNOWN)
 		if result != test.result {
 			t.Errorf("Parsing %s, %v failed, got: %s, want: %s.", test.testString, test.splitInput, result, test.result)
 		}
@@ -68,22 +72,22 @@ func TestParseMovement(t *testing.T) {
 
 // func TestMovePlayer(t *testing.T) {
 // 	// just for testing TODO: remove
-// 	var here = &Entity{
+// 	var here = &constants.Entity{
 // 		name:     "Here",
 // 		desc:     "A nice place",
 // 		location: [2]int{0, 0},
 // 		validMoves: map[string]string{
-// 			SOUTH: "You amble from here to there",
+// 			constants.SOUTH: "You amble from here to there",
 // 		},
 // 	}
 
 // 	// just for testing TODO: remove
-// 	var there = &Entity{
+// 	var there = &constants.Entity{
 // 		name:     "There",
 // 		desc:     "An okay place, I guess",
 // 		location: [2]int{0, 1},
 // 		validMoves: map[string]string{
-// 			NORTH: "You mobilize from there to here",
+// 			constants.NORTH: "You mobilize from there to here",
 // 		},
 // 	}
 
@@ -95,8 +99,8 @@ func TestParseMovement(t *testing.T) {
 // 		splitInput []string
 // 		result     string
 // 	}{
-// 		{"", emptyArray, UNKNOWN},
-// 		{"asdf", emptyArray, UNKNOWN},
+// 		{"", emptyArray, constants.UNKNOWN},
+// 		{"asdf", emptyArray, constants.UNKNOWN},
 // 		{"go", emptyArray, WHERE_TO_GO("go")},
 // 		{"go", northArray, GOING}, // TODO: in the future this will actually respond with the movement response from the room?
 // 		{"walk", emptyArray, WHERE_TO_GO("walk")},
@@ -104,7 +108,7 @@ func TestParseMovement(t *testing.T) {
 // 	}
 
 // 	for _, test := range tests {
-// 		result := parseMovement(test.testString, test.splitInput, UNKNOWN)
+// 		result := parseMovement(test.testString, test.splitInput, constants.UNKNOWN)
 // 		if result != test.result {
 // 			t.Errorf("Parsing %s, %v failed, got: %s, want: %s.", test.testString, test.splitInput, result, test.result)
 // 		}

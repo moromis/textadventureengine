@@ -1,23 +1,29 @@
-package main
+package inventoryManager
 
 import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"tae.com/constants"
 )
 
 type Inventory struct {
-	getInventory      func() []*Entity
-	addToInventory    func(thing *Entity) int
-	setInventory      func(stuff []*Entity)
-	setInventoryLimit func(newSize int) []*Entity
-	inspectInventory  func(itemName string) (int, string)
-	printInventory    func() string
+	GetInventory      func() []*constants.Entity
+	AddToInventory    func(thing *constants.Entity) int
+	SetInventory      func(stuff []*constants.Entity)
+	SetInventoryLimit func(newSize int) []*constants.Entity
+	InspectInventory  func(itemName string) (int, string)
+	PrintInventory    func() string
 }
 
 var inventoryInstance *Inventory = nil
 
-func initInventory(initialStuff []*Entity, maxSize int) (int, error) {
+func GetInventory() *Inventory {
+	return inventoryInstance
+}
+
+func InitInventory(initialStuff []*constants.Entity, maxSize int) (int, error) {
 	if maxSize < 0 {
 		return -1, errors.New("max inventory size of less than 0 passed")
 	}
@@ -28,10 +34,10 @@ func initInventory(initialStuff []*Entity, maxSize int) (int, error) {
 	var inventoryLimit = maxSize
 	var inventory = initialStuff
 
-	getInventory := func() []*Entity {
+	getInventory := func() []*constants.Entity {
 		return inventory
 	}
-	addToInventory := func(thing *Entity) int {
+	addToInventory := func(thing *constants.Entity) int {
 		if len(inventory) < inventoryLimit {
 			inventory = append(inventory, thing)
 			return 0
@@ -39,10 +45,10 @@ func initInventory(initialStuff []*Entity, maxSize int) (int, error) {
 			return -1
 		}
 	}
-	setInventory := func(stuff []*Entity) {
+	setInventory := func(stuff []*constants.Entity) {
 		inventory = stuff
 	}
-	setInventoryLimit := func(newSize int) []*Entity {
+	setInventoryLimit := func(newSize int) []*constants.Entity {
 		inventoryLimit = newSize
 		if newSize < len(inventory) {
 			ejectedItems := inventory[newSize:]
@@ -53,9 +59,9 @@ func initInventory(initialStuff []*Entity, maxSize int) (int, error) {
 	}
 	inspectInventory := func(itemName string) (int, string) {
 		for _, thing := range inventory {
-			thingName := strings.ToLower(thing.name)
+			thingName := strings.ToLower(thing.Name)
 			if thingName == itemName {
-				return 0, fmt.Sprintf("You examine the %s:\n%s", thingName, thing.desc)
+				return 0, fmt.Sprintf("You examine the %s:\n%s", thingName, thing.Desc)
 			}
 		}
 		return -1, ""
@@ -63,7 +69,7 @@ func initInventory(initialStuff []*Entity, maxSize int) (int, error) {
 	printInventory := func() string {
 		ret := "Your inventory:\n"
 		for index, item := range inventory {
-			ret += "- " + item.name
+			ret += "- " + item.Name
 			if index < len(inventory)-1 {
 				ret += "\n"
 			}
