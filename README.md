@@ -21,3 +21,8 @@ air
 - add entities to room
 - add "take" command
 - ~~implement randomly chosen response (from array)~~
+- **editor**
+  - ~~load game file~~
+  - ~~run game file (test)~~
+  - save game file
+  - create/edit entities
