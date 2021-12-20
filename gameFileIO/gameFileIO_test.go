@@ -3,8 +3,9 @@ package gameFileIO
 import (
 	"testing"
 
+	"textadventureengine/testObjects"
+
 	"github.com/stretchr/testify/assert"
-	"tae.com/testObjects"
 )
 
 func TestJsonIO(t *testing.T) {

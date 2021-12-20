@@ -1,6 +1,6 @@
 package testObjects
 
-import "tae.com/constants"
+import "textadventureengine/constants"
 
 // ROOMS
 var Here = &constants.Entity{

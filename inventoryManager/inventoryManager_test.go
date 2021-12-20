@@ -3,9 +3,10 @@ package inventoryManager
 import (
 	"testing"
 
+	"textadventureengine/constants"
+	"textadventureengine/testObjects"
+
 	"github.com/stretchr/testify/assert"
-	"tae.com/constants"
-	"tae.com/testObjects"
 )
 
 // TODO: describe this test

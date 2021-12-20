@@ -1,4 +1,4 @@
-module tae.com
+module textadventureengine
 
 go 1.17
 

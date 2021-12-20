@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"tae.com/constants"
+	"textadventureengine/constants"
 )
 
 func openFileHandle(filename string, fileMethod func(string) (*os.File, error)) *os.File {

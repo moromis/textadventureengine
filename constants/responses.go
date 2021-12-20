@@ -2,12 +2,14 @@ package constants
 
 // RESPONSES
 const (
-	UNKNOWN          = "I'm not sure what you're saying there pal."
 	GO               = "Go Where?"
 	GOING            = "Going!" // @placeholder
 	HOW_TO_GO        = "That move doesn't seem possible"
 	LOOK_PLACEHOLDER = "You definitely look at that. For sure." // @placeholder
 )
+
+// ARRAY RESPONSES
+var UNKNOWN = []string{"I'm not sure what you're saying there pal.", "Huh?", "Beep boop, cannot compute"}
 
 // FUNCTION RESPONSES
 var WHERE_TO_GO = func(verb string) string { return "Where do you want to " + verb + "?" }

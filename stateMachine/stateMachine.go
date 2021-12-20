@@ -3,9 +3,10 @@ package stateMachine
 import (
 	"strings"
 
-	"tae.com/constants"
-	"tae.com/inventoryManager"
-	"tae.com/mapManager"
+	"textadventureengine/constants"
+	"textadventureengine/helpers"
+	"textadventureengine/inventoryManager"
+	"textadventureengine/mapManager"
 )
 
 // TODO: do these belong here, and should they be global?
@@ -21,13 +22,11 @@ func SetupStateMachine(mapLayout []*constants.Entity, mapWidth int, startingRoom
 func ParseInput(input string) string {
 	lowerInput := strings.ToLower(input)
 	splitInput := strings.Fields(lowerInput)
-	var output string = constants.UNKNOWN
+	var output = helpers.PickStringRandomly(constants.UNKNOWN)
 	if len(splitInput) == 0 {
 		return output // TODO: should just assign and then return at the end of this whole thing
 	}
 	verb := splitInput[0]
-
-	println("verb: ", verb)
 
 	output = parseInventory(verb, output)
 	output = parseMovement(verb, splitInput, output)
@@ -38,7 +37,6 @@ func ParseInput(input string) string {
 func parseMovement(verb string, splitInput []string, output string) string {
 	// check if the command is a movement command
 	validCommand := constants.MOVEMENT_COMMANDS[verb]
-	println(validCommand)
 	if validCommand > 0 {
 		// check if there's anything following the movement command
 		if len(splitInput) > 1 {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"tae.com/constants"
+	"textadventureengine/constants"
 )
 
 type MapInstance struct {

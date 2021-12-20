@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"tae.com/constants"
+	"textadventureengine/constants"
 )
 
 type Inventory struct {

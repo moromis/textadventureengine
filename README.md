@@ -1,7 +1,7 @@
 # Text Adventure Engine
 
 ## Overview
-This is a [text adventure game](https://en.wikipedia.org/wiki/Text-based_game) engine written in go. It's purpose is to facilitate easy building and running of text adventure games.
+This is a [text adventure game](https://en.wikipedia.org/wiki/Text-based_game) engine written in go. It's purpose is to facilitate easy building and running of text adventure (also known as [interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction)) games.
 
 ## Running
 ### Development
@@ -20,4 +20,4 @@ air
 - ~~add saving and loading to/from files~~
 - add entities to room
 - add "take" command
-- implement randomly chosen response (from array)
+- ~~implement randomly chosen response (from array)~~

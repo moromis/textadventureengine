@@ -3,15 +3,16 @@ package main
 import (
 	"log"
 
+	"textadventureengine/gameFileIO"
+	"textadventureengine/mapManager"
+	"textadventureengine/stateMachine"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	"tae.com/gameFileIO"
-	"tae.com/mapManager"
-	"tae.com/stateMachine"
 )
 
 // GLOBALS

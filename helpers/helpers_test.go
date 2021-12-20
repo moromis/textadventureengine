@@ -18,7 +18,7 @@ func TestIndexInto2dArray(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := indexInto2dArray(testArr, test.col, test.row, width)
+		result := IndexInto2dArray(testArr, test.col, test.row, width)
 		if result != test.result {
 			t.Errorf("Indexing into array at (%d, %d) failed, got: %d, want: %d.", test.row, test.col, result, test.result)
 		}
