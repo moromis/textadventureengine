@@ -6,6 +6,7 @@ import (
 
 	"textadventureengine/gameFileIO"
 	"textadventureengine/helpers"
+	"textadventureengine/resources"
 	"textadventureengine/runner/stateMachine"
 	"textadventureengine/runner/worldManager"
 	"textadventureengine/structs"
@@ -82,7 +83,7 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 
 func OpenRunner(a fyne.App, game *structs.Game) {
 	// setup window
-	w := a.NewWindow("TAE Runner") // TODO: replace with title of game?
+	w := a.NewWindow("TAE Runner")
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -128,7 +129,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 	input.OnSubmitted = submitFunc
 
 	// SUBMIT BUTTON
-	submit := widget.NewButtonWithIcon("Submit", fyne.CurrentApp().Icon(), func() { submitFunc(input.Text) })
+	submit := widget.NewButtonWithIcon("Submit", resources.SendIcon, func() { submitFunc(input.Text) })
 	submit.Disable()
 
 	// open game callback
