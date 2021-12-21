@@ -14,8 +14,8 @@ import (
 const VERBOSE = false // @global -- user defined, settings
 
 func SetupStateMachine(game *structs.Game) {
-	inventoryManager.InitInventory(game.Inventory, 100) // TODO: read limit from preferences/file
-	worldManager.InitWorld(game.WorldLayout, game.WorldWidth, game.StartingRoom)
+	inventoryManager.InitInventoryManager(game.Inventory, 100) // TODO: read limit from preferences/file
+	worldManager.InitWorldManager(game.WorldLayout, game.WorldWidth, game.StartingRoom)
 }
 
 // TODO: allow for arrays of responses, and randomly select if the type is an array
@@ -53,7 +53,7 @@ func parseMovement(verb string, splitInput []string, output string) string {
 }
 
 func movePlayer(direction string) string {
-	worldInstance := worldManager.GetWorld()
+	worldInstance := worldManager.GetWorldManager()
 	validMoves := worldInstance.GetCurrentRoom().ValidMoves
 	if validMoves[direction] != "" {
 		// get the cardinal direction move array [colMove, rowMove]
@@ -80,8 +80,8 @@ func movePlayer(direction string) string {
 }
 
 func parseLook(verb string, splitInput []string, output string) string {
-	worldInstance := worldManager.GetWorld()
-	inventory := inventoryManager.GetInventory()
+	worldInstance := worldManager.GetWorldManager()
+	inventory := inventoryManager.GetInventoryManager()
 	// check if the command is a movement command
 	validCommand := constants.INSPECT_COMMANDS[verb]
 	if validCommand > 0 {
@@ -106,7 +106,7 @@ func parseInventory(verb string, output string) string {
 	// check if the command is a movement command
 	validCommand := constants.INVENTORY_COMMANDS[verb]
 	if validCommand > 0 {
-		inventory := inventoryManager.GetInventory()
+		inventory := inventoryManager.GetInventoryManager()
 		return inventory.PrintInventory()
 	}
 	return output

@@ -23,7 +23,7 @@ var WINDOW_WIDTH float32 = 640
 var WINDOW_HEIGHT float32 = 480
 
 func getMapTable() *widget.Table {
-	var worldInstance = worldManager.GetWorld()
+	var worldInstance = worldManager.GetWorldManager()
 	var data = worldInstance.GetWorldTable()
 	table := widget.NewTable(
 		func() (int, int) {
@@ -134,7 +134,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 	// open game callback
 	var openGameCallback = func(newTitleText string) {
 		title.SetText(helpers.TitleCase(newTitleText))
-		t = worldManager.GetWorld().PrintRoom(false)
+		t = worldManager.GetWorldManager().PrintRoom(false)
 		text.SetText(t)
 		submit.Enable()
 		input.Enable()

@@ -7,7 +7,7 @@ import (
 	"textadventureengine/structs"
 )
 
-type Inventory struct {
+type InventoryManager struct {
 	GetInventory      func() []*structs.Entity
 	AddToInventory    func(thing *structs.Entity) int
 	SetInventory      func(stuff []*structs.Entity)
@@ -16,13 +16,13 @@ type Inventory struct {
 	PrintInventory    func() string
 }
 
-var inventoryInstance *Inventory = nil
+var inventoryManagerInstance *InventoryManager = nil
 
-func GetInventory() *Inventory {
-	return inventoryInstance
+func GetInventoryManager() *InventoryManager {
+	return inventoryManagerInstance
 }
 
-func InitInventory(initialStuff []*structs.Entity, maxSize int) (int, error) {
+func InitInventoryManager(initialStuff []*structs.Entity, maxSize int) (int, error) {
 	if maxSize < 0 {
 		return -1, errors.New("max inventory size of less than 0 passed")
 	}
@@ -78,8 +78,8 @@ func InitInventory(initialStuff []*structs.Entity, maxSize int) (int, error) {
 	}
 
 	// singleton pattern
-	if inventoryInstance == nil {
-		inventoryInstance = &Inventory{
+	if inventoryManagerInstance == nil {
+		inventoryManagerInstance = &InventoryManager{
 			getInventory,
 			addToInventory,
 			setInventory,

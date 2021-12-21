@@ -7,7 +7,7 @@ import (
 	"textadventureengine/structs"
 )
 
-type World struct {
+type WorldManager struct {
 	GetWidth       func() int
 	GetWorldLayout func() []*structs.Entity
 	GetWorldTable  func() [][]string
@@ -17,7 +17,7 @@ type World struct {
 	Move           func(move [2]int)
 }
 
-var worldInstance *World = nil
+var worldManagerInstance *WorldManager = nil
 
 func getValidMovesString(room *structs.Entity) string {
 	ret := "\nFrom here, you can go:\n"
@@ -32,12 +32,12 @@ func getValidMovesString(room *structs.Entity) string {
 	return ret
 }
 
-func GetWorld() *World {
-	return worldInstance
+func GetWorldManager() *WorldManager {
+	return worldManagerInstance
 }
 
 // TODO: put all map management, map state, current room, etc. here
-func InitWorld(worldLayout []*structs.Entity, worldWidth int, startingRoom *structs.Entity) {
+func InitWorldManager(worldLayout []*structs.Entity, worldWidth int, startingRoom *structs.Entity) {
 	var currentRoom = startingRoom
 	getWidth := func() int {
 		return worldWidth
@@ -81,8 +81,8 @@ func InitWorld(worldLayout []*structs.Entity, worldWidth int, startingRoom *stru
 	}
 
 	// singleton pattern
-	if worldInstance == nil {
-		worldInstance = &World{
+	if worldManagerInstance == nil {
+		worldManagerInstance = &WorldManager{
 			getWidth,
 			getWorldLayout,
 			getWorldTable,
