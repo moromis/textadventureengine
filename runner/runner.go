@@ -7,6 +7,7 @@ import (
 	"textadventureengine/gameFileIO"
 	"textadventureengine/helpers"
 	"textadventureengine/resources"
+	"textadventureengine/runner/constants"
 	"textadventureengine/runner/stateMachine"
 	"textadventureengine/runner/worldManager"
 	"textadventureengine/structs"
@@ -17,11 +18,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
-
-// GLOBALS
-// TODO: move to preferences
-var WINDOW_WIDTH float32 = 640
-var WINDOW_HEIGHT float32 = 480
 
 func getMapTable() *widget.Table {
 	var worldInstance = worldManager.GetWorldManager()
@@ -48,14 +44,14 @@ func openMapWindow(a fyne.App) {
 	// setup window
 	w := a.NewWindow("Map")
 	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 
 	// map
 	mapWidget := getMapTable()
 
 	// set up the contents of the window
 	w.SetContent(mapWidget)
-	mapWidget.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	mapWidget.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 
 	// show the window
 	w.Show()
@@ -66,7 +62,7 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 	// show the window
 	w.Show()
 	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -84,8 +80,6 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 func OpenRunner(a fyne.App, game *structs.Game) {
 	// setup window
 	w := a.NewWindow("TAE Runner")
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
 	// HEADER
 	// buttons
@@ -103,7 +97,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 	textScroll := container.NewVScroll(
 		text,
 	)
-	textScroll.SetMinSize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT*2/3))
+	textScroll.SetMinSize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT*2/3))
 
 	// INPUT FIELD
 	input := widget.NewEntry()

@@ -6,6 +6,7 @@ import (
 	"textadventureengine/editor/fields"
 	"textadventureengine/gameFileIO"
 	"textadventureengine/runner"
+	"textadventureengine/runner/constants"
 	"textadventureengine/structs"
 
 	"fyne.io/fyne/v2"
@@ -15,17 +16,12 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-// GLOBALS
-// TODO: move to preferences
-var WINDOW_WIDTH float32 = 640
-var WINDOW_HEIGHT float32 = 480
-
 func openGame(a fyne.App, callback func(*structs.Game)) {
-	w := a.NewWindow("Save Game")
+	w := a.NewWindow("Open Game")
 	// show the window
 	w.Show()
 	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -42,7 +38,7 @@ func saveGame(a fyne.App, gameTitle string, callback func(*structs.Game)) {
 	// show the window
 	w.Show()
 	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 	dialog.ShowFileSave(func(uc fyne.URIWriteCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -62,8 +58,8 @@ func saveGame(a fyne.App, gameTitle string, callback func(*structs.Game)) {
 func OpenEditor(a fyne.App) {
 	// setup window
 	w := a.NewWindow("TAE Editor")
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+	// w.SetFixedSize(true)
+	// w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 
 	var currentGame *structs.Game = nil
 
@@ -92,10 +88,11 @@ func OpenEditor(a fyne.App) {
 
 	// set up the contents of the window
 	w.SetContent(container.NewVBox(
-		container.NewHBox(exit, layout.NewSpacer(), open, test),
+		container.NewHBox(exit, layout.NewSpacer(), open, test, save),
 		gameTitle,
 		layout.NewSpacer(),
-		container.NewHBox(layout.NewSpacer(), save),
+		fields.Room(a, 1),
+		layout.NewSpacer(),
 	))
 
 	// show and run the window

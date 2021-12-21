@@ -4,25 +4,17 @@ import (
 	"textadventureengine/editor"
 	"textadventureengine/runner"
 
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
-// GLOBALS
-// TODO: move to preferences
-var WINDOW_WIDTH float32 = 640
-var WINDOW_HEIGHT float32 = 480
-
 // MAIN
 func main() {
 	// setup window
 	a := app.New()
 	w := a.NewWindow("Text Adventure Engine")
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
 	// HEADER
 	// buttons
