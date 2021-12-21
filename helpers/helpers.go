@@ -17,14 +17,5 @@ func PickStringRandomly(arr []string) string {
 // FROM: https://www.jeremymorgan.com/tutorials/go/learn-golang-casing/
 func TitleCase(input string) string {
 	input = strings.ReplaceAll(input, "_", " ")
-	words := strings.Fields(input)
-	smallwords := " a an on the to "
-	for index, word := range words {
-		if strings.Contains(smallwords, " "+word+" ") {
-			words[index] = word
-		} else {
-			words[index] = strings.Title(word)
-		}
-	}
-	return strings.Join(words, " ")
+	return strings.Title(strings.ToLower(input))
 }

@@ -3,6 +3,7 @@ package mapManager
 import (
 	"fmt"
 	"strings"
+	"textadventureengine/runner/constants"
 	"textadventureengine/structs"
 )
 
@@ -55,9 +56,9 @@ func InitMapInstance(mapLayout []*structs.Entity, mapWidth int, startingRoom *st
 		}
 		return ret
 	}
-	getRoomString := func(full bool) string {
+	printRoom := func(full bool) string {
 		if currentRoom == nil {
-			return "You are floating in a void... There is nothing... (maybe create some rooms?)"
+			return constants.NO_ROOMS
 		}
 		details := ""
 		if full {
@@ -86,7 +87,7 @@ func InitMapInstance(mapLayout []*structs.Entity, mapWidth int, startingRoom *st
 			getMapLayout,
 			getMapTable,
 			getCurrentRoom,
-			getRoomString,
+			printRoom,
 			canMove,
 			move,
 		}

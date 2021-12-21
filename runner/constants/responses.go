@@ -2,6 +2,7 @@ package constants
 
 // RESPONSES
 const (
+	NO_ROOMS         = "You are floating in a void... There is nothing... (maybe create some rooms?)"
 	GO               = "Go Where?"
 	GOING            = "Going!" // @placeholder
 	HOW_TO_GO        = "That move doesn't seem possible"
