@@ -58,8 +58,9 @@ func InitInventory(initialStuff []*structs.Entity, maxSize int) (int, error) {
 	}
 	inspectInventory := func(itemName string) (int, string) {
 		for _, thing := range inventory {
+			lowerName := strings.ToLower(itemName)
 			thingName := strings.ToLower(thing.Name)
-			if thingName == itemName {
+			if thingName == lowerName {
 				return 0, fmt.Sprintf("You examine the %s:\n%s", thingName, thing.Desc)
 			}
 		}
