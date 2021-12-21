@@ -1,5 +1,5 @@
 .DS_Store
 tmp
-test_data*
 textadventureengine
 main
+*.tae

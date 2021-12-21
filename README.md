@@ -24,7 +24,6 @@ air
 - **editor**
   - ~~load game file~~
   - ~~run game file (test)~~
-  - fix file not saving with extension
   - see if title can autofill filename in save file dialog?
   - save game file
   - create/edit entities

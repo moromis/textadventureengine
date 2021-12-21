@@ -24,7 +24,11 @@ func openFileHandle(filename string, fileMethod func(string) (*os.File, error)) 
 
 // JSON
 func WriteGameFileToJson(game *structs.Game) {
-	var f = openFileHandle(game.Title, os.Create)
+	var filepath = game.FilePath
+	if filepath == "" {
+		filepath = game.Title
+	}
+	var f = openFileHandle(filepath, os.Create)
 	defer f.Close()
 
 	// point encoder at file
