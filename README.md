@@ -1,5 +1,7 @@
 # Text Adventure Engine
 
+![cov-badge](./coverage_badge.png)
+
 ## Overview
 This is a [text adventure game](https://en.wikipedia.org/wiki/Text-based_game) engine written in go. It's purpose is to facilitate easy building and running of text adventure (also known as [interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction)) games.
 
@@ -29,3 +31,4 @@ air
   - create/edit entities
 - **runner**
   - fix long lines of text not wrapping
+- test everything :)

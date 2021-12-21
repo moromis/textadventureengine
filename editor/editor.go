@@ -61,7 +61,7 @@ func saveGame(a fyne.App, gameTitle string, callback func(*structs.Game)) {
 
 func OpenEditor(a fyne.App) {
 	// setup window
-	w := a.NewWindow("TAE Editor") // TODO: replace with title of game?
+	w := a.NewWindow("TAE Editor")
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
