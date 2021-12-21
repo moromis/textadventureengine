@@ -1,6 +1,7 @@
 package structs
 
 type Game struct {
+	FilePath     string
 	Title        string
 	MapLayout    []*Entity
 	MapWidth     int

@@ -56,6 +56,9 @@ func InitMapInstance(mapLayout []*structs.Entity, mapWidth int, startingRoom *st
 		return ret
 	}
 	getRoomString := func(full bool) string {
+		if currentRoom == nil {
+			return "You are floating in a void... There is nothing... (maybe create some rooms?)"
+		}
 		details := ""
 		if full {
 			details = getValidMovesString(currentRoom)

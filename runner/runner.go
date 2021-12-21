@@ -70,10 +70,12 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		uri := item.URI()
-		path := uri.Path()
-		stateMachine.SetupStateMachine(gameFileIO.ReadGameFileFromJson(path))
-		callback(uri)
+		if item != nil {
+			uri := item.URI()
+			path := uri.Path()
+			stateMachine.SetupStateMachine(gameFileIO.ReadGameFileFromJson(path))
+			callback(uri)
+		}
 		w.Close()
 	}, w)
 }

@@ -26,3 +26,5 @@ air
   - ~~run game file (test)~~
   - save game file
   - create/edit entities
+- **runner**
+  - fix long lines of text not wrapping
