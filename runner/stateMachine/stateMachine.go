@@ -6,7 +6,7 @@ import (
 	"textadventureengine/helpers"
 	"textadventureengine/runner/constants"
 	"textadventureengine/runner/inventoryManager"
-	"textadventureengine/runner/mapManager"
+	"textadventureengine/runner/worldManager"
 	"textadventureengine/structs"
 )
 
@@ -15,7 +15,7 @@ const VERBOSE = false // @global -- user defined, settings
 
 func SetupStateMachine(game *structs.Game) {
 	inventoryManager.InitInventory(game.Inventory, 100) // TODO: read limit from preferences/file
-	mapManager.InitMapInstance(game.MapLayout, game.MapWidth, game.StartingRoom)
+	worldManager.InitWorld(game.WorldLayout, game.WorldWidth, game.StartingRoom)
 }
 
 // TODO: allow for arrays of responses, and randomly select if the type is an array
@@ -53,22 +53,22 @@ func parseMovement(verb string, splitInput []string, output string) string {
 }
 
 func movePlayer(direction string) string {
-	mapInstance := mapManager.GetMap()
-	validMoves := mapInstance.GetCurrentRoom().ValidMoves
+	worldInstance := worldManager.GetWorld()
+	validMoves := worldInstance.GetCurrentRoom().ValidMoves
 	if validMoves[direction] != "" {
 		// get the cardinal direction move array [colMove, rowMove]
 		movement := structs.CARDINAL_DIRECTIONS[direction]
 		// if the movement is not malformed/exists
 		if len(movement) == 2 {
 			// ensure the move is possible
-			if mapInstance.CanMove(movement) {
+			if worldInstance.CanMove(movement) {
 				// store move
 				moveDesc := validMoves[direction]
 				if VERBOSE {
-					moveDesc += "\n\n" + mapInstance.PrintRoom(false)
+					moveDesc += "\n\n" + worldInstance.PrintRoom(false)
 				}
 				// move
-				mapInstance.Move(movement)
+				worldInstance.Move(movement)
 				// return the description of the move
 				return moveDesc
 			}
@@ -80,7 +80,7 @@ func movePlayer(direction string) string {
 }
 
 func parseLook(verb string, splitInput []string, output string) string {
-	mapInstance := mapManager.GetMap()
+	worldInstance := worldManager.GetWorld()
 	inventory := inventoryManager.GetInventory()
 	// check if the command is a movement command
 	validCommand := constants.INSPECT_COMMANDS[verb]
@@ -97,7 +97,7 @@ func parseLook(verb string, splitInput []string, output string) string {
 			// just look around -- unhandled in other words
 			return constants.LOOK_PLACEHOLDER
 		}
-		return mapInstance.PrintRoom(true)
+		return worldInstance.PrintRoom(true)
 	}
 	return output
 }

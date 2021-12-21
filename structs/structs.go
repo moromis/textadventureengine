@@ -3,8 +3,8 @@ package structs
 type Game struct {
 	FilePath     string
 	Title        string
-	MapLayout    []*Entity
-	MapWidth     int
+	WorldLayout  []*Entity
+	WorldWidth   int
 	StartingRoom *Entity
 	Inventory    []*Entity // TODO: should/can inventory just be `stuff` in a player Entity? (maybe with EntityType == PLAYER_TYPE)
 }

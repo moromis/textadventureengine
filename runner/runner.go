@@ -6,8 +6,8 @@ import (
 
 	"textadventureengine/gameFileIO"
 	"textadventureengine/helpers"
-	"textadventureengine/runner/mapManager"
 	"textadventureengine/runner/stateMachine"
+	"textadventureengine/runner/worldManager"
 	"textadventureengine/structs"
 
 	"fyne.io/fyne/v2"
@@ -23,8 +23,8 @@ var WINDOW_WIDTH float32 = 640
 var WINDOW_HEIGHT float32 = 480
 
 func getMapTable() *widget.Table {
-	var mapInstance = mapManager.GetMap()
-	var data = mapInstance.GetMapTable()
+	var worldInstance = worldManager.GetWorld()
+	var data = worldInstance.GetWorldTable()
 	table := widget.NewTable(
 		func() (int, int) {
 			return len(data), len(data[0])
@@ -33,7 +33,7 @@ func getMapTable() *widget.Table {
 			return widget.NewLabel("wide content")
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
-			currentLocation := mapInstance.GetCurrentRoom().Location
+			currentLocation := worldInstance.GetCurrentRoom().Location
 			newLabel := data[i.Row][i.Col]
 			if i.Row == currentLocation[0] && i.Col == currentLocation[1] {
 				newLabel += " *"
@@ -134,7 +134,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 	// open game callback
 	var openGameCallback = func(newTitleText string) {
 		title.SetText(helpers.TitleCase(newTitleText))
-		t = mapManager.GetMap().PrintRoom(false)
+		t = worldManager.GetWorld().PrintRoom(false)
 		text.SetText(t)
 		submit.Enable()
 		input.Enable()

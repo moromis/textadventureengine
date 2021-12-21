@@ -1,4 +1,4 @@
-package mapManager
+package worldManager
 
 import (
 	"fmt"
@@ -7,17 +7,17 @@ import (
 	"textadventureengine/structs"
 )
 
-type MapInstance struct {
+type World struct {
 	GetWidth       func() int
-	GetMapLayout   func() []*structs.Entity
-	GetMapTable    func() [][]string
+	GetWorldLayout func() []*structs.Entity
+	GetWorldTable  func() [][]string
 	GetCurrentRoom func() *structs.Entity
 	PrintRoom      func(full bool) string
 	CanMove        func(move [2]int) bool
 	Move           func(move [2]int)
 }
 
-var mapInstance *MapInstance = nil
+var worldInstance *World = nil
 
 func getValidMovesString(room *structs.Entity) string {
 	ret := "\nFrom here, you can go:\n"
@@ -32,27 +32,27 @@ func getValidMovesString(room *structs.Entity) string {
 	return ret
 }
 
-func GetMap() *MapInstance {
-	return mapInstance
+func GetWorld() *World {
+	return worldInstance
 }
 
 // TODO: put all map management, map state, current room, etc. here
-func InitMapInstance(mapLayout []*structs.Entity, mapWidth int, startingRoom *structs.Entity) {
+func InitWorld(worldLayout []*structs.Entity, worldWidth int, startingRoom *structs.Entity) {
 	var currentRoom = startingRoom
 	getWidth := func() int {
-		return mapWidth
+		return worldWidth
 	}
-	getMapLayout := func() []*structs.Entity {
-		return mapLayout
+	getWorldLayout := func() []*structs.Entity {
+		return worldLayout
 	}
-	getMapTable := func() [][]string {
+	getWorldTable := func() [][]string {
 		stringified := []string{}
-		for _, room := range mapLayout {
+		for _, room := range worldLayout {
 			stringified = append(stringified, room.Name)
 		}
 		ret := [][]string{}
-		for i := 0; i < len(stringified); i += mapWidth {
-			ret = append(ret, stringified[i:i+mapWidth])
+		for i := 0; i < len(stringified); i += worldWidth {
+			ret = append(ret, stringified[i:i+worldWidth])
 		}
 		return ret
 	}
@@ -77,15 +77,15 @@ func InitMapInstance(mapLayout []*structs.Entity, mapWidth int, startingRoom *st
 	move := func(move [2]int) {
 		colMove := currentRoom.Location[0] + move[0]
 		rowMove := currentRoom.Location[1] + move[1]
-		currentRoom = mapLayout[colMove+rowMove*mapWidth]
+		currentRoom = worldLayout[colMove+rowMove*worldWidth]
 	}
 
 	// singleton pattern
-	if mapInstance == nil {
-		mapInstance = &MapInstance{
+	if worldInstance == nil {
+		worldInstance = &World{
 			getWidth,
-			getMapLayout,
-			getMapTable,
+			getWorldLayout,
+			getWorldTable,
 			getCurrentRoom,
 			printRoom,
 			canMove,

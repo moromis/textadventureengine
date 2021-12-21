@@ -31,7 +31,7 @@ var TestEntities = []*structs.Entity{
 }
 
 // MAP
-var TestMapWidth = 1
+var TestWorldWidth = 1
 var TestMap = []*structs.Entity{
 	Here,
 	There,
@@ -55,8 +55,8 @@ var TestInventory = []*structs.Entity{
 // GAME
 var TestGame = &structs.Game{
 	Title:        "test_data",
-	MapLayout:    TestMap,
-	MapWidth:     TestMapWidth,
+	WorldLayout:  TestMap,
+	WorldWidth:   TestWorldWidth,
 	StartingRoom: Here,
 	Inventory:    TestInventory,
 }
