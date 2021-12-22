@@ -61,12 +61,7 @@ func openMapWindow(a fyne.App) {
 	w.Show()
 }
 
-func openFileSelect(a fyne.App, callback func(fyne.URI)) {
-	w := a.NewWindow("Open Game (*.tae)")
-	// show the window
-	w.Show()
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+func openFileSelect(w fyne.Window, callback func(fyne.URI)) {
 	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -77,7 +72,6 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 			stateMachine.SetupStateMachine(gameFileIO.ReadGameFileFromJson(path))
 			callback(uri)
 		}
-		w.Close()
 	}, w)
 }
 
@@ -144,7 +138,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 
 	// OPEN FILE BUTTON
 	openFile := widget.NewButton("Open Game File", func() {
-		go openFileSelect(a, func(uri fyne.URI) {
+		go openFileSelect(w, func(uri fyne.URI) {
 			openGameCallback(helpers.TitleCase(strings.ReplaceAll(uri.Name(), uri.Extension(), "")))
 		})
 	})

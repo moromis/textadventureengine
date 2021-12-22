@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"textadventureengine/helpers"
+	"textadventureengine/runner/constants"
 	"textadventureengine/structs"
 )
 
@@ -67,6 +69,9 @@ func InitInventoryManager(initialStuff []*structs.Entity, maxSize int) (int, err
 		return -1, ""
 	}
 	printInventory := func() string {
+		if len(inventory) == 0 {
+			return helpers.PickStringRandomly(constants.NO_INVENTORY)
+		}
 		ret := "Your inventory:\n"
 		for index, item := range inventory {
 			ret += "- " + item.Name
