@@ -7,11 +7,13 @@ import (
 	"textadventureengine/editor/fields"
 	"textadventureengine/gameFileIO"
 	"textadventureengine/runner"
+	sharedUi "textadventureengine/shared/ui"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/imdario/mergo"
 )
@@ -108,6 +110,7 @@ func OpenEditor(a fyne.App) {
 	w := a.NewWindow("TAE Editor")
 	w.SetFixedSize(true)
 	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+	w.CenterOnScreen()
 
 	var currentGame *constants.Game = nil
 
@@ -115,14 +118,13 @@ func OpenEditor(a fyne.App) {
 	gameTitle := fields.Title()
 
 	// buttons
-	exit := widget.NewButton("Exit", func() { w.Close() })
-	test := widget.NewButton("Test", func() {
+	test := widget.NewButtonWithIcon("Test", theme.MailSendIcon(), func() {
 		if currentGame != nil {
 			go runner.OpenRunner(a, currentGame)
 		}
 	})
 	test.Disable()
-	open := widget.NewButton("Open", func() {
+	open := widget.NewButtonWithIcon("Open", theme.FolderOpenIcon(), func() {
 		go openGame(w, func(g *constants.Game) {
 			currentGame = g
 			gameTitle.SetText(currentGame.Title)
@@ -133,10 +135,10 @@ func OpenEditor(a fyne.App) {
 		currentGame = game
 		test.Enable()
 	}
-	save := widget.NewButton("Save", func() { go saveGame(w, gameTitle.Text, saveCallback) })
+	save := widget.NewButtonWithIcon("Save", theme.DocumentSaveIcon(), func() { go saveGame(w, gameTitle.Text, saveCallback) })
 
 	content := container.NewVBox(
-		container.NewHBox(exit, layout.NewSpacer(), open, test, save),
+		container.NewHBox(sharedUi.ExitButton(w), layout.NewSpacer(), open, test, save),
 		gameTitle,
 		layout.NewSpacer(),
 		// TODO: this should map over all the rooms

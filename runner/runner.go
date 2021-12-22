@@ -9,11 +9,13 @@ import (
 	"textadventureengine/helpers"
 	"textadventureengine/runner/stateMachine"
 	"textadventureengine/runner/worldManager"
+	sharedUi "textadventureengine/shared/ui"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -55,12 +57,7 @@ func openMapWindow(a fyne.App) {
 	w.Show()
 }
 
-func openFileSelect(a fyne.App, callback func(fyne.URI)) {
-	w := a.NewWindow("Open Game (*.tae)")
-	// show the window
-	w.Show()
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+func openFileSelect(w fyne.Window, callback func(fyne.URI)) {
 	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -78,11 +75,11 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 func OpenRunner(a fyne.App, game *Game) {
 	// setup window
 	w := a.NewWindow("TAE Runner")
+	w.CenterOnScreen()
 
 	// HEADER
 	// buttons
-	exit := widget.NewButton("Exit", func() { w.Close() })
-	openMap := widget.NewButton("Open Map", func() { go openMapWindow(a) })
+	openMap := widget.NewButtonWithIcon("Open Map", theme.ComputerIcon(), func() { go openMapWindow(a) })
 	openMap.Disable()
 	// title
 	title := widget.NewLabel("")
@@ -121,7 +118,7 @@ func OpenRunner(a fyne.App, game *Game) {
 	input.OnSubmitted = submitFunc
 
 	// SUBMIT BUTTON
-	submit := widget.NewButton("Submit", func() { submitFunc(input.Text) })
+	submit := widget.NewButtonWithIcon("Submit", theme.MailSendIcon(), func() { submitFunc(input.Text) })
 	submit.Disable()
 
 	// open game callback
@@ -135,8 +132,8 @@ func OpenRunner(a fyne.App, game *Game) {
 	}
 
 	// OPEN FILE BUTTON
-	openFile := widget.NewButton("Open Game File", func() {
-		go openFileSelect(a, func(uri fyne.URI) {
+	openFile := widget.NewButtonWithIcon("Open Game File", theme.FolderOpenIcon(), func() {
+		go openFileSelect(w, func(uri fyne.URI) {
 			openGameCallback(helpers.TitleCase(strings.ReplaceAll(uri.Name(), uri.Extension(), "")))
 		})
 	})
@@ -149,7 +146,7 @@ func OpenRunner(a fyne.App, game *Game) {
 
 	// set up the contents of the window
 	w.SetContent(container.NewVBox(
-		container.NewHBox(exit, openFile, layout.NewSpacer(), openMap),
+		container.NewHBox(sharedUi.ExitButton(w), openFile, layout.NewSpacer(), openMap),
 		title,
 		textScroll,
 		// layout.NewSpacer(),
