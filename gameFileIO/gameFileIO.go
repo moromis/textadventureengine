@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
-	"textadventureengine/structs"
+	"textadventureengine/constants"
 )
 
 func openFileHandle(filename string, fileMethod func(string) (*os.File, error)) *os.File {
@@ -23,7 +23,7 @@ func openFileHandle(filename string, fileMethod func(string) (*os.File, error)) 
 }
 
 // JSON
-func WriteGameFileToJson(game *structs.Game) {
+func WriteGameFileToJson(game *constants.Game) {
 	var filepath = game.FilePath
 	if filepath == "" {
 		filepath = game.Title
@@ -38,7 +38,7 @@ func WriteGameFileToJson(game *structs.Game) {
 	encoder.Encode(game)
 }
 
-func ReadGameFileFromJson(filename string) (game *structs.Game) {
+func ReadGameFileFromJson(filename string) (game *constants.Game) {
 	var f = openFileHandle(filename, os.Open)
 	defer f.Close()
 

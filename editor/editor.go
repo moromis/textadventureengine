@@ -3,25 +3,74 @@ package editor
 import (
 	"log"
 
+	"textadventureengine/constants"
 	"textadventureengine/editor/fields"
 	"textadventureengine/gameFileIO"
 	"textadventureengine/runner"
-	"textadventureengine/runner/constants"
-	"textadventureengine/structs"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"github.com/imdario/mergo"
 )
 
-func openGame(a fyne.App, callback func(*structs.Game)) {
-	w := a.NewWindow("Open Game")
-	// show the window
-	w.Show()
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+var worldWidth = 1
+var worldLayout = []*constants.Entity{
+	{
+		Location: [2]int{0, 0},
+	},
+}
+var startingRoom = worldLayout[0]
+var _rooms []*widget.Button = nil
+
+func saveRoom(room *constants.Entity, index int) {
+	if len(worldLayout) > index {
+		err := mergo.Merge(worldLayout[index], room, mergo.WithOverride)
+		if err != nil {
+			log.Fatal(err)
+		}
+		_rooms[index].SetText(room.Name)
+	}
+}
+
+func renderRoomsBorders(w fyne.Window) *fyne.Container {
+	line := container.NewHBox(layout.NewSpacer())
+	for i := 0; i <= worldWidth+1; i++ {
+		line.Add(layout.NewSpacer())
+		line.Add(fields.NewRoom(w, func() {})) // TODO: dry
+		line.Add(layout.NewSpacer())
+	}
+	line.Add(layout.NewSpacer())
+	return line
+}
+
+func renderRooms(w fyne.Window) *fyne.Container {
+	content := container.NewVBox()
+
+	content.Add(renderRoomsBorders(w))
+	for i := 0; i < len(worldLayout); i += worldWidth {
+		line := container.NewHBox(layout.NewSpacer())
+		line.Add(fields.NewRoom(w, func() {})) // TODO: dry
+		for j := 0; j < worldWidth; j++ {
+			room := fields.Room(w, worldLayout, i, func(e *constants.Entity) {
+				saveRoom(e, i)
+			})
+			_rooms = append(_rooms, room)
+			line.Add(layout.NewSpacer())
+			line.Add(room)
+			line.Add(layout.NewSpacer())
+		}
+		line.Add(fields.NewRoom(w, func() {})) // TODO: dry
+		line.Add(layout.NewSpacer())
+		content.Add(line)
+	}
+	content.Add(renderRoomsBorders(w))
+	return content
+}
+
+func openGame(w fyne.Window, callback func(*constants.Game)) {
 	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -29,71 +78,77 @@ func openGame(a fyne.App, callback func(*structs.Game)) {
 		if item != nil {
 			callback(gameFileIO.ReadGameFileFromJson(item.URI().Path()))
 		}
-		w.Close()
 	}, w)
 }
 
-func saveGame(a fyne.App, gameTitle string, callback func(*structs.Game)) {
-	w := a.NewWindow("Save Game")
-	// show the window
-	w.Show()
-	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+func saveGame(w fyne.Window, gameTitle string, callback func(*constants.Game)) {
 	dialog.ShowFileSave(func(uc fyne.URIWriteCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
 		}
 		if uc != nil {
-			game := &structs.Game{
-				FilePath: uc.URI().Path(),
-				Title:    gameTitle,
+			game := &constants.Game{
+				FilePath:    uc.URI().Path(),
+				Title:       gameTitle,
+				WorldLayout: worldLayout,
+				// TODO: this should be based on data from a select
+				// which autofills/allows for selections
+				// from rooms we've created
+				StartingRoom: startingRoom,
+				WorldWidth:   worldWidth,
 			}
 			gameFileIO.WriteGameFileToJson(game)
 			callback(game)
 		}
-		w.Close()
 	}, w)
 }
 
 func OpenEditor(a fyne.App) {
 	// setup window
 	w := a.NewWindow("TAE Editor")
-	// w.SetFixedSize(true)
-	// w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+	w.SetFixedSize(true)
+	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 
-	var currentGame *structs.Game = nil
-
-	// HEADER
-	// buttons
-	exit := widget.NewButton("Exit", func() { w.Close() })
-	test := widget.NewButton("Test", func() { go runner.OpenRunner(a, currentGame) })
-	test.Disable()
-	open := widget.NewButton("Open", func() {
-		go openGame(a, func(g *structs.Game) {
-			currentGame = g
-			test.Enable()
-		})
-	})
+	var currentGame *constants.Game = nil
 
 	// edit fields
 	gameTitle := fields.Title()
 
-	var saveCallback = func(game *structs.Game) {
+	// buttons
+	exit := widget.NewButton("Exit", func() { w.Close() })
+	test := widget.NewButton("Test", func() {
+		if currentGame != nil {
+			go runner.OpenRunner(a, currentGame)
+		}
+	})
+	test.Disable()
+	open := widget.NewButton("Open", func() {
+		go openGame(w, func(g *constants.Game) {
+			currentGame = g
+			gameTitle.SetText(currentGame.Title)
+			test.Enable()
+		})
+	})
+	var saveCallback = func(game *constants.Game) {
 		currentGame = game
 		test.Enable()
 	}
-	// save button
-	save := widget.NewButton("Save", func() { go saveGame(a, gameTitle.Text, saveCallback) })
-	// save.Disable()
+	save := widget.NewButton("Save", func() { go saveGame(w, gameTitle.Text, saveCallback) })
 
-	// set up the contents of the window
-	w.SetContent(container.NewVBox(
+	content := container.NewVBox(
 		container.NewHBox(exit, layout.NewSpacer(), open, test, save),
 		gameTitle,
 		layout.NewSpacer(),
-		fields.Room(a, 1),
+		// TODO: this should map over all the rooms
+		// that we've created to display them all --
+		// also we need to pass in data based on index
+		// so it can populate from saved data
+		renderRooms(w),
 		layout.NewSpacer(),
-	))
+	)
+
+	// set up the contents of the window
+	w.SetContent(content)
 
 	// show and run the window
 	w.Show()

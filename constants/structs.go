@@ -1,4 +1,4 @@
-package structs
+package constants
 
 type Game struct {
 	FilePath     string

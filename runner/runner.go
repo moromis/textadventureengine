@@ -4,13 +4,11 @@ import (
 	"log"
 	"strings"
 
+	. "textadventureengine/constants"
 	"textadventureengine/gameFileIO"
 	"textadventureengine/helpers"
-	"textadventureengine/resources"
-	"textadventureengine/runner/constants"
 	"textadventureengine/runner/stateMachine"
 	"textadventureengine/runner/worldManager"
-	"textadventureengine/structs"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -44,14 +42,14 @@ func openMapWindow(a fyne.App) {
 	// setup window
 	w := a.NewWindow("Map")
 	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
 	// map
 	mapWidget := getMapTable()
 
 	// set up the contents of the window
 	w.SetContent(mapWidget)
-	mapWidget.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+	mapWidget.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 
 	// show the window
 	w.Show()
@@ -62,7 +60,7 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 	// show the window
 	w.Show()
 	w.SetFixedSize(true)
-	w.Resize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+	w.Resize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 	dialog.ShowFileOpen(func(item fyne.URIReadCloser, err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -77,7 +75,7 @@ func openFileSelect(a fyne.App, callback func(fyne.URI)) {
 	}, w)
 }
 
-func OpenRunner(a fyne.App, game *structs.Game) {
+func OpenRunner(a fyne.App, game *Game) {
 	// setup window
 	w := a.NewWindow("TAE Runner")
 
@@ -97,7 +95,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 	textScroll := container.NewVScroll(
 		text,
 	)
-	textScroll.SetMinSize(fyne.NewSize(constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT*2/3))
+	textScroll.SetMinSize(fyne.NewSize(WINDOW_WIDTH, WINDOW_HEIGHT*2/3))
 
 	// INPUT FIELD
 	input := widget.NewEntry()
@@ -123,7 +121,7 @@ func OpenRunner(a fyne.App, game *structs.Game) {
 	input.OnSubmitted = submitFunc
 
 	// SUBMIT BUTTON
-	submit := widget.NewButtonWithIcon("Submit", resources.SendIcon, func() { submitFunc(input.Text) })
+	submit := widget.NewButton("Submit", func() { submitFunc(input.Text) })
 	submit.Disable()
 
 	// open game callback

@@ -3,15 +3,15 @@ package worldManager
 import (
 	"fmt"
 	"strings"
+	. "textadventureengine/constants"
 	"textadventureengine/runner/constants"
-	"textadventureengine/structs"
 )
 
 type WorldManager struct {
 	GetWidth       func() int
-	GetWorldLayout func() []*structs.Entity
+	GetWorldLayout func() []*Entity
 	GetWorldTable  func() [][]string
-	GetCurrentRoom func() *structs.Entity
+	GetCurrentRoom func() *Entity
 	PrintRoom      func(full bool) string
 	CanMove        func(move [2]int) bool
 	Move           func(move [2]int)
@@ -19,7 +19,7 @@ type WorldManager struct {
 
 var worldManagerInstance *WorldManager = nil
 
-func getValidMovesString(room *structs.Entity) string {
+func getValidMovesString(room *Entity) string {
 	ret := "\nFrom here, you can go:\n"
 	i := 0
 	for move := range room.ValidMoves {
@@ -37,12 +37,12 @@ func GetWorldManager() *WorldManager {
 }
 
 // TODO: put all map management, map state, current room, etc. here
-func InitWorldManager(worldLayout []*structs.Entity, worldWidth int, startingRoom *structs.Entity) {
+func InitWorldManager(worldLayout []*Entity, worldWidth int, startingRoom *Entity) {
 	var currentRoom = startingRoom
 	getWidth := func() int {
 		return worldWidth
 	}
-	getWorldLayout := func() []*structs.Entity {
+	getWorldLayout := func() []*Entity {
 		return worldLayout
 	}
 	getWorldTable := func() [][]string {
@@ -66,7 +66,7 @@ func InitWorldManager(worldLayout []*structs.Entity, worldWidth int, startingRoo
 		}
 		return fmt.Sprintf("%s\n%s\n%s\n", strings.ToUpper(currentRoom.Name), currentRoom.Desc, details) // TODO: in the future we'll want to have varying levels of verbosity
 	}
-	getCurrentRoom := func() *structs.Entity {
+	getCurrentRoom := func() *Entity {
 		return currentRoom
 	}
 	canMove := func(move [2]int) bool {

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"textadventureengine/structs"
+	"textadventureengine/constants"
 	"textadventureengine/testObjects"
 
 	"github.com/stretchr/testify/assert"
@@ -52,7 +52,7 @@ func TestSetInventoryLimit(t *testing.T) {
 	// set the inventory limit higher
 	ejectedItems := inventoryManagerInstance.SetInventoryLimit(10)
 	// nothing should be ejected
-	assert.Equal(t, ejectedItems, []*structs.Entity(nil))
+	assert.Equal(t, ejectedItems, []*constants.Entity(nil))
 	// set the inventory limit to 0
 	ejectedItems = inventoryManagerInstance.SetInventoryLimit(0)
 	// the ejected items should be the whole inventory we put in
@@ -69,7 +69,7 @@ func TestSetInventory(t *testing.T) {
 	inventoryManagerInstance = nil
 	InitInventoryManager(testObjects.TestInventory, 1)
 	// test setting the inventory
-	inventoryManagerInstance.SetInventory([]*structs.Entity{testObjects.Bow})
+	inventoryManagerInstance.SetInventory([]*constants.Entity{testObjects.Bow})
 	inv := inventoryManagerInstance.GetInventory()
 	assert.Len(t, inv, 1)
 	assert.Equal(t, inv[0], testObjects.Bow)
@@ -108,7 +108,7 @@ func TestInspectInventory(t *testing.T) {
 
 func TestPrintInventory(t *testing.T) {
 	inventoryManagerInstance = nil
-	InitInventoryManager([]*structs.Entity{testObjects.Ax, testObjects.Bow}, 2)
+	InitInventoryManager([]*constants.Entity{testObjects.Ax, testObjects.Bow}, 2)
 	i := GetInventoryManager()
 	output := i.PrintInventory()
 	// make sure anything is output at all
