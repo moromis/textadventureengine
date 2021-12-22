@@ -3,6 +3,7 @@ package worldManager
 import (
 	"fmt"
 	"strings"
+	"textadventureengine/helpers"
 	"textadventureengine/runner/constants"
 	"textadventureengine/structs"
 )
@@ -20,6 +21,9 @@ type WorldManager struct {
 var worldManagerInstance *WorldManager = nil
 
 func getValidMovesString(room *structs.Entity) string {
+	if len(room.ValidMoves) == 0 {
+		return helpers.PickStringRandomly(constants.STUCK)
+	}
 	ret := "\nFrom here, you can go:\n"
 	i := 0
 	for move := range room.ValidMoves {

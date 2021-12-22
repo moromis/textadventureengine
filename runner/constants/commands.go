@@ -1,12 +1,11 @@
 package constants
 
-// commands are maps of the command verb to ints 1 or greater
-// kevin Dec. 10 2021: could potentially do something more useful than a nondescript int
+var MOVEMENT_COMMANDS = []string{"g", "go", "walk"}
 
-var MOVEMENT_COMMANDS = map[string]int{"g": 1, "go": 2, "walk": 3}
+var INSPECT_COMMANDS = []string{"l", "look", "inspect"}
 
-var INSPECT_COMMANDS = map[string]int{"l": 1, "look": 2, "inspect": 3}
+var INVENTORY_COMMANDS = []string{"i", "inventory"}
 
-var INVENTORY_COMMANDS = map[string]int{"i": 1, "inventory": 2}
+var TAKE_COMMANDS = []string{"t", "take"}
 
 var SAVE_COMMANDS = []string{"s", "save"}

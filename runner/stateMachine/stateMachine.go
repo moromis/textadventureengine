@@ -37,8 +37,8 @@ func ParseInput(input string) string {
 
 func parseMovement(verb string, splitInput []string, output string) string {
 	// check if the command is a movement command
-	validCommand := constants.MOVEMENT_COMMANDS[verb]
-	if validCommand > 0 {
+	ok, found := helpers.ListContains(constants.MOVEMENT_COMMANDS, verb)
+	if ok && found {
 		// check if there's anything following the movement command
 		if len(splitInput) > 1 {
 			// get the move direction
@@ -73,18 +73,18 @@ func movePlayer(direction string) string {
 				return moveDesc
 			}
 		} else {
-			return constants.HOW_TO_GO
+			return helpers.PickStringRandomly(constants.HOW_TO_GO)
 		}
 	}
-	return constants.HOW_TO_GO
+	return helpers.PickStringRandomly(constants.HOW_TO_GO)
 }
 
 func parseLook(verb string, splitInput []string, output string) string {
 	worldInstance := worldManager.GetWorldManager()
 	inventory := inventoryManager.GetInventoryManager()
 	// check if the command is a movement command
-	validCommand := constants.INSPECT_COMMANDS[verb]
-	if validCommand > 0 {
+	ok, found := helpers.ListContains(constants.INSPECT_COMMANDS, verb)
+	if ok && found {
 		if len(splitInput) > 1 {
 			maybeThing := splitInput[1]
 			// look through our inventory first
@@ -104,8 +104,8 @@ func parseLook(verb string, splitInput []string, output string) string {
 
 func parseInventory(verb string, output string) string {
 	// check if the command is a movement command
-	validCommand := constants.INVENTORY_COMMANDS[verb]
-	if validCommand > 0 {
+	ok, found := helpers.ListContains(constants.INVENTORY_COMMANDS, verb)
+	if ok && found {
 		inventory := inventoryManager.GetInventoryManager()
 		return inventory.PrintInventory()
 	}
