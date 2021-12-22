@@ -21,6 +21,7 @@ import (
 var worldWidth = 1
 var worldLayout = []*constants.Entity{
 	{
+		Name:     "Room 1",
 		Location: [2]int{0, 0},
 	},
 }
@@ -115,7 +116,24 @@ func OpenEditor(a fyne.App) {
 	var currentGame *constants.Game = nil
 
 	// edit fields
+	form := widget.NewForm()
+
 	gameTitle := fields.Title()
+	form.Append("Game Title", gameTitle)
+
+	var roomOptions []string
+	for _, room := range worldLayout {
+		roomOptions = append(roomOptions, room.Name)
+	}
+	startingRoom := widget.NewSelect(roomOptions, func(s string) {
+		for i := range worldLayout {
+			if worldLayout[i].Name == s {
+				startingRoom = worldLayout[i]
+			}
+		}
+	})
+	startingRoom.SetSelectedIndex(0)
+	form.Append("Starting Room", startingRoom)
 
 	// buttons
 	test := widget.NewButtonWithIcon("Test", theme.MailSendIcon(), func() {
@@ -139,7 +157,7 @@ func OpenEditor(a fyne.App) {
 
 	content := container.NewVBox(
 		container.NewHBox(sharedUi.ExitButton(w), layout.NewSpacer(), open, test, save),
-		gameTitle,
+		form,
 		layout.NewSpacer(),
 		// TODO: this should map over all the rooms
 		// that we've created to display them all --

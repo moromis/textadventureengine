@@ -4,10 +4,11 @@ go 1.17
 
 require (
 	fyne.io/fyne/v2 v2.1.2
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.7.0
 )
 
 require (
+	fyne.io/x/fyne v0.0.0-20211210044345-46cf1d06cf7e // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
