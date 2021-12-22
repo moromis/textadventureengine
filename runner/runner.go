@@ -68,7 +68,6 @@ func openFileSelect(w fyne.Window, callback func(fyne.URI)) {
 			stateMachine.SetupStateMachine(gameFileIO.ReadGameFileFromJson(path))
 			callback(uri)
 		}
-		w.Close()
 	}, w)
 }
 
