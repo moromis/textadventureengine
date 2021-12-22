@@ -18,15 +18,20 @@ import (
 	"github.com/imdario/mergo"
 )
 
+// TODO: expand on this to enable testing
+type Editor struct {
+	RoomButtons []*widget.Button
+}
+
 var worldWidth = 1
 var worldLayout = []*constants.Entity{
 	{
 		Name:     "Room 1",
-		Location: [2]int{0, 0},
+		Location: [2]int{10, 10},
 	},
 }
 var startingRoom = worldLayout[0]
-var _rooms []*widget.Button = nil
+var roomButtons []*widget.Button = nil
 
 func saveRoom(room *constants.Entity, index int) {
 	if len(worldLayout) > index {
@@ -34,13 +39,13 @@ func saveRoom(room *constants.Entity, index int) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		_rooms[index].SetText(room.Name)
+		roomButtons[index].SetText(room.Name)
 	}
 }
 
 func renderRoomsBorders(w fyne.Window) *fyne.Container {
-	line := container.NewHBox(layout.NewSpacer())
-	for i := 0; i <= worldWidth+1; i++ {
+	line := container.NewVBox(layout.NewSpacer())
+	for i := 0; i <= len(worldLayout)/worldWidth+1; i++ {
 		line.Add(layout.NewSpacer())
 		line.Add(fields.NewRoom(w, func() {})) // TODO: dry
 		line.Add(layout.NewSpacer())
@@ -50,26 +55,29 @@ func renderRoomsBorders(w fyne.Window) *fyne.Container {
 }
 
 func renderRooms(w fyne.Window) *fyne.Container {
-	content := container.NewVBox()
+	content := container.NewHBox(layout.NewSpacer())
 
 	content.Add(renderRoomsBorders(w))
+	rooms := container.NewVBox()
+	rooms.Add(fields.NewRoom(w, func() {})) // TODO: dry
 	for i := 0; i < len(worldLayout); i += worldWidth {
 		line := container.NewHBox(layout.NewSpacer())
-		line.Add(fields.NewRoom(w, func() {})) // TODO: dry
 		for j := 0; j < worldWidth; j++ {
 			room := fields.Room(w, worldLayout, i, func(e *constants.Entity) {
 				saveRoom(e, i)
 			})
-			_rooms = append(_rooms, room)
+			roomButtons = append(roomButtons, room)
 			line.Add(layout.NewSpacer())
 			line.Add(room)
 			line.Add(layout.NewSpacer())
 		}
-		line.Add(fields.NewRoom(w, func() {})) // TODO: dry
 		line.Add(layout.NewSpacer())
-		content.Add(line)
+		rooms.Add(line)
 	}
+	rooms.Add(fields.NewRoom(w, func() {})) // TODO: dry
+	content.Add(rooms)
 	content.Add(renderRoomsBorders(w))
+	content.Add(layout.NewSpacer())
 	return content
 }
 
@@ -106,7 +114,7 @@ func saveGame(w fyne.Window, gameTitle string, callback func(*constants.Game)) {
 	}, w)
 }
 
-func OpenEditor(a fyne.App) {
+func OpenEditor(a fyne.App) []*widget.Button {
 	// setup window
 	w := a.NewWindow("TAE Editor")
 	w.SetFixedSize(true)
@@ -172,4 +180,6 @@ func OpenEditor(a fyne.App) {
 
 	// show and run the window
 	w.Show()
+
+	return roomButtons
 }
